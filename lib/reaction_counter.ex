@@ -1,4 +1,4 @@
-defmodule ReactionCounter do
+defmodule Relaxbot.ReactionCounter do
   use GenServer
 
   ## Client API
@@ -7,7 +7,7 @@ defmodule ReactionCounter do
   Starts the registry.
   """
   def start_link do
-    GenServer.start_link(__MODULE__, :ok, [])
+    GenServer.start_link(__MODULE__, :ok, name: Relaxbot.ReactionCounter)
   end
 
   @doc """
@@ -15,22 +15,22 @@ defmodule ReactionCounter do
 
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
-  def lookup(server, message_id) do
-    GenServer.call(server, {:lookup, message_id})
+  def lookup(message_id) do
+    GenServer.call(Relaxbot.ReactionCounter, {:lookup, message_id})
   end
 
   @doc """
   Adds a message_id if it doesn't exist, increments the reaction count if it does.
   """
-  def add(server, message_id) do
-    GenServer.cast(server, {:add, message_id})
+  def add(message_id) do
+    GenServer.cast(Relaxbot.ReactionCounter, {:add, message_id})
   end
 
   @doc """
   decrements the message_id count if the message_id exists and has a count > 0.
   """
-  def remove(server, message_id) do
-    GenServer.cast(server, {:remove, message_id})
+  def remove(message_id) do
+    GenServer.cast(Relaxbot.ReactionCounter, {:remove, message_id})
   end
 
   ## Server Callbacks
@@ -54,10 +54,10 @@ defmodule ReactionCounter do
   def handle_cast({:remove, message_id}, message_ids) do
     if Map.has_key?(message_ids, message_id) do
     	tweet_count = Map.get(message_ids, message_id)
-    	if ( tweet_count > 0 ) do 
+    	if ( tweet_count > 0 ) do
     		{:noreply, Map.put(message_ids, message_id, tweet_count - 1)}
-    	else 
-    		{:noreply, message_ids}	
+    	else
+    		{:noreply, message_ids}
     	end
     else
     	# pass through, shouldn't remove if if doesn't have a key

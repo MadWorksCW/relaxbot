@@ -16,6 +16,7 @@ defmodule Relaxbot.Mixfile do
   def application do
     [
       applications: [:logger, :httpoison, :slack],
+      mod: {Relaxbot, []},
       env: [slack_token: nil]
     ]
   end
