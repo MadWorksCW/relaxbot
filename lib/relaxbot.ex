@@ -1,0 +1,2 @@
+defmodule Relaxbot do
+end
