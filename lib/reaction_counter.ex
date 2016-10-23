@@ -43,26 +43,20 @@ defmodule Relaxbot.ReactionCounter do
   end
 
   def handle_cast({:add, message_id}, message_ids) do
-    if Map.has_key?(message_ids, message_id) do
-    	message_ids = Map.put(message_ids, message_id, Map.get(message_ids, message_id) + 1)
-      {:noreply, message_ids}
-    else
-      {:noreply, Map.put(message_ids, message_id, 1)}
+    count = case Map.get(message_ids, message_id) do
+      nil -> 1
+      c -> c + 1
     end
+    {:noreply, Map.put(message_ids, message_id, count)}
   end
 
   def handle_cast({:remove, message_id}, message_ids) do
-    if Map.has_key?(message_ids, message_id) do
-    	tweet_count = Map.get(message_ids, message_id)
-    	if ( tweet_count > 0 ) do
-    		{:noreply, Map.put(message_ids, message_id, tweet_count - 1)}
-    	else
-    		{:noreply, message_ids}
-    	end
-    else
-    	# pass through, shouldn't remove if if doesn't have a key
-      {:noreply, message_ids}
+    count = case Map.get(message_ids, message_id) do
+      nil -> 0
+      0 -> 0
+      c -> c - 1
     end
+    {:noreply, Map.put(message_ids, message_id, count)}
   end
 
 end

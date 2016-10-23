@@ -12,6 +12,8 @@ defmodule Relaxbot.Supervisor do
       worker(Relaxbot.ReactionCounter, [])
     ]
 
-    supervise(children, strategy: :one_for_one)
+    result = supervise(children, strategy: :one_for_one)
+    #IO.inspect Supervisor.which_children(Relaxbot.Supervisor)
+    result
   end
 end

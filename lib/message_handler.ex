@@ -1,3 +1,4 @@
+#TODO This should be refactored into a slack server and the actual message handler
 defmodule Relaxbot.MessageHandler do
   alias Relaxbot.SlackMessage
   alias Relaxbot.ReactionCounter
@@ -20,7 +21,7 @@ defmodule Relaxbot.MessageHandler do
     send_message("message unique_id is #{SlackMessage.unique_id(message)}", message.channel, slack)
   end
 
-  def handle_message(message = %{type: "reaction_added"}, slack) do
+  def handle_message(message = %{type: "reaction_added", reaction: "twitter"}, slack) do
     uid = SlackMessage.unique_id(message.item)
     IO.puts "REACTED to #{uid}"
     IO.inspect message
@@ -29,7 +30,7 @@ defmodule Relaxbot.MessageHandler do
     {:ok}
   end
 
-  def handle_message(message = %{type: "reaction_removed"}, slack) do
+  def handle_message(message = %{type: "reaction_removed", reaction: "twitter"}, slack) do
     uid = SlackMessage.unique_id(message.item)
     IO.puts "REACTED to #{uid}"
     IO.inspect message
