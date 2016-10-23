@@ -1,0 +1,4 @@
+use Mix.Config
+
+config :relaxbot,
+  slack_token: "SLACK_TOKEN_HERE"
