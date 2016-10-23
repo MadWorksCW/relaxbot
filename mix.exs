@@ -14,7 +14,10 @@ defmodule Relaxbot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [
+      applications: [:logger, :httpoison, :slack],
+      env: [slack_token: nil]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -27,6 +30,10 @@ defmodule Relaxbot.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:httpoison, "~> 0.9.0"},
+      {:slack, "~> 0.7.1"},
+      {:websocket_client, git: "https://github.com/jeremyong/websocket_client"}
+    ]
   end
 end
