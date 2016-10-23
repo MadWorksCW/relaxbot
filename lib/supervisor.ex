@@ -9,7 +9,8 @@ defmodule Relaxbot.Supervisor do
     IO.puts "supervisor init"
     children = [
       worker(Relaxbot.MessageHandler, []),
-      worker(Relaxbot.ReactionCounter, [])
+      worker(Relaxbot.ReactionCounter, []),
+      worker(Relaxbot.MessageCache, [])
     ]
 
     result = supervise(children, strategy: :one_for_one)

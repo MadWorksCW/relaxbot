@@ -22,15 +22,15 @@ defmodule Relaxbot.ReactionCounter do
   @doc """
   Adds a message_id if it doesn't exist, increments the reaction count if it does.
   """
-  def add(message_id) do
-    GenServer.cast(Relaxbot.ReactionCounter, {:add, message_id})
+  def increment(message_id) do
+    GenServer.cast(Relaxbot.ReactionCounter, {:increment, message_id})
   end
 
   @doc """
   decrements the message_id count if the message_id exists and has a count > 0.
   """
-  def remove(message_id) do
-    GenServer.cast(Relaxbot.ReactionCounter, {:remove, message_id})
+  def decrement(message_id) do
+    GenServer.cast(Relaxbot.ReactionCounter, {:decrement, message_id})
   end
 
   ## Server Callbacks
@@ -42,7 +42,7 @@ defmodule Relaxbot.ReactionCounter do
     {:reply, Map.fetch(message_ids, message_id), message_ids}
   end
 
-  def handle_cast({:add, message_id}, message_ids) do
+  def handle_cast({:increment, message_id}, message_ids) do
     count = case Map.get(message_ids, message_id) do
       nil -> 1
       c -> c + 1
@@ -50,7 +50,7 @@ defmodule Relaxbot.ReactionCounter do
     {:noreply, Map.put(message_ids, message_id, count)}
   end
 
-  def handle_cast({:remove, message_id}, message_ids) do
+  def handle_cast({:decrement, message_id}, message_ids) do
     count = case Map.get(message_ids, message_id) do
       nil -> 0
       0 -> 0

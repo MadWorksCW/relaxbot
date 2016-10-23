@@ -2,6 +2,7 @@
 defmodule Relaxbot.MessageHandler do
   alias Relaxbot.SlackMessage
   alias Relaxbot.ReactionCounter
+  alias Relaxbot.MessageCache
 
   use Slack
 
@@ -18,6 +19,7 @@ defmodule Relaxbot.MessageHandler do
   def handle_message(message = %{type: "message"}, slack) do
     IO.puts "MESSAGE"
     IO.inspect message
+    MessageCache.add(SlackMessage.unique_id(message), message.text)
     send_message("message unique_id is #{SlackMessage.unique_id(message)}", message.channel, slack)
   end
 
@@ -26,7 +28,7 @@ defmodule Relaxbot.MessageHandler do
     IO.puts "REACTED to #{uid}"
     IO.inspect message
     send_message("Nice reaction (#{message.reaction}) to #{uid}", message.item.channel, slack)
-    ReactionCounter.add(uid)
+    ReactionCounter.increment(uid)
     {:ok}
   end
 
@@ -35,7 +37,7 @@ defmodule Relaxbot.MessageHandler do
     IO.puts "REACTED to #{uid}"
     IO.inspect message
     send_message("Nice reaction (#{message.reaction}) to #{uid}", message.item.channel, slack)
-    ReactionCounter.remove(uid)
+    ReactionCounter.decrement(uid)
     {:ok}
   end
 
@@ -43,7 +45,6 @@ defmodule Relaxbot.MessageHandler do
 
   def handle_info({:message, text, channel}, slack) do
     IO.puts "Sending your message, captain!"
-
     send_message(text, channel, slack)
 
     {:ok}
