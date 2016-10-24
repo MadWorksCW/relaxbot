@@ -20,10 +20,10 @@ defmodule Relaxbot.MessageCache do
   end
 
   @doc """
-  Adds a message if message_id is not present, updates it if message_id exists
+  Adds a message_info (%{message: "", channel: ""}) if message_id is not present, updates it if message_id exists
   """
-  def add(message_id, message) do
-    GenServer.cast(Relaxbot.MessageCache, {:add, message_id, message})
+  def add(message_id, message_info) do
+    GenServer.cast(Relaxbot.MessageCache, {:add, message_id, message_info})
   end
 
   @doc """
@@ -42,8 +42,8 @@ defmodule Relaxbot.MessageCache do
     {:reply, Map.fetch(message_ids, message_id), message_ids}
   end
 
-  def handle_cast({:add, message_id, message}, message_ids) do
-    {:noreply, Map.put(message_ids, message_id, message)}
+  def handle_cast({:add, message_id, message_info}, message_ids) do
+    {:noreply, Map.put(message_ids, message_id, message_info)}
   end
 
   def handle_cast({:remove, message_id}, message_ids) do

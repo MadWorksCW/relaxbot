@@ -13,21 +13,24 @@ defmodule Relaxbot.MessageHandler do
 
   def handle_connect(slack) do
     IO.puts "Connected as #{slack.me.name}"
-    send_message("connected", "#tcpi", slack)
+    # send_message("connected", "#tcpi", slack)
   end
 
   def handle_message(message = %{type: "message"}, slack) do
     IO.puts "MESSAGE"
     IO.inspect message
-    MessageCache.add(SlackMessage.unique_id(message), message.text)
-    send_message("message unique_id is #{SlackMessage.unique_id(message)}", message.channel, slack)
+    MessageCache.add(SlackMessage.unique_id(message), %{text: message.text, channel: message.channel})
+    # send_message("message unique_id is #{SlackMessage.unique_id(message)}", message.channel, slack)
   end
+
+  # Ignore messages with subtypes (changed, etc) for now
+  def handle_message(message = %{type: "message", subtype: _}, slack), do: :ok
 
   def handle_message(message = %{type: "reaction_added", reaction: "twitter"}, slack) do
     uid = SlackMessage.unique_id(message.item)
     IO.puts "REACTED to #{uid}"
     IO.inspect message
-    send_message("Nice reaction (#{message.reaction}) to #{uid}", message.item.channel, slack)
+    # send_message("Nice reaction (#{message.reaction}) to #{uid}", message.item.channel, slack)
     ReactionCounter.increment(uid)
     {:ok}
   end
@@ -36,7 +39,7 @@ defmodule Relaxbot.MessageHandler do
     uid = SlackMessage.unique_id(message.item)
     IO.puts "REACTED to #{uid}"
     IO.inspect message
-    send_message("Nice reaction (#{message.reaction}) to #{uid}", message.item.channel, slack)
+    # send_message("removed reaction (#{message.reaction}) to #{uid}", message.item.channel, slack)
     ReactionCounter.decrement(uid)
     {:ok}
   end
