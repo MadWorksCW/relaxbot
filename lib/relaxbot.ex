@@ -10,4 +10,7 @@ defmodule Relaxbot do
     IO.puts "Stopping relaxbot"
     {:ok}
   end
+
+  defp slack_pid({Relaxbot.MessageHandler, pid, :worker, _}), do: pid
+  defp slack_pid(_), do: false
 end

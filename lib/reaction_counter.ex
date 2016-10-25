@@ -47,6 +47,7 @@ defmodule Relaxbot.ReactionCounter do
       nil -> 1
       c -> c + 1
     end
+    Relaxbot.Tweeter.notify(message_id, count)
     {:noreply, Map.put(message_ids, message_id, count)}
   end
 

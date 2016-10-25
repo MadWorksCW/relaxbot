@@ -1,4 +1,12 @@
 use Mix.Config
 
 config :relaxbot,
-  slack_token: "SLACK_TOKEN_HERE"
+  slack_token: "SLACK_TOKEN_HERE",
+  twitter_handle: "madworkscw"
+
+config :extwitter, :oauth, [
+   consumer_key: ,
+   consumer_secret: "",
+   access_token: "",
+   access_token_secret: ""
+]

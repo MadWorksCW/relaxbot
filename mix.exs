@@ -15,7 +15,7 @@ defmodule Relaxbot.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :httpoison, :slack],
+      applications: [:logger, :httpoison, :slack, :extwitter],
       mod: {Relaxbot, []},
       env: [slack_token: nil]
     ]
@@ -34,7 +34,9 @@ defmodule Relaxbot.Mixfile do
     [
       {:httpoison, "~> 0.9.0"},
       {:slack, "~> 0.7.1"},
-      {:websocket_client, git: "https://github.com/jeremyong/websocket_client"}
+      {:websocket_client, git: "https://github.com/jeremyong/websocket_client"},
+      {:oauth, github: "tim/erlang-oauth"},
+      {:extwitter, "~> 0.6"}
     ]
   end
 end
