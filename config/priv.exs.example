@@ -1,4 +1,5 @@
 use Mix.Config
 
 config :relaxbot,
-  slack_token: "SLACK_TOKEN_HERE"
+  slack_token: "SLACK_TOKEN_HERE",
+  tweet_store: "FILE_PATH_HERE"
