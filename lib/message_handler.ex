@@ -8,7 +8,7 @@ defmodule Relaxbot.MessageHandler do
 
   def start_link do
     IO.puts "Starting MessageHandler"
-    start_link(Application.get_env(:relaxbot, :slack_token))
+    Slack.Bot.start_link(__MODULE__, [], Application.get_env(:relaxbot, :slack_token))
   end
 
   def handle_connect(slack) do
