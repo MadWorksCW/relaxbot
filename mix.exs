@@ -35,7 +35,8 @@ defmodule Relaxbot.Mixfile do
       {:httpoison, "~> 0.9.0"},
       {:oauth, github: "tim/erlang-oauth"},
       {:extwitter, "~> 0.6"},
-      {:slack, "~> 0.8.0"}
+      # {:slack, github: "BlakeWilliams/Elixir-Slack"}
+      {:slack, github: "samsonasu/Elixir-Slack", branch: 'bs-fix-info-handler'}
     ]
   end
 end
