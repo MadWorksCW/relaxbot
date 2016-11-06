@@ -11,48 +11,53 @@ defmodule Relaxbot.TweetStore do
   end
 
   @doc """
-  Looks up the pid for `tweet_id` stored in `server`.
+  Has this messages been tweeted already?
 
-  Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
+  Returns `true if the tweet has been
   """
-  def lookup(tweet_id) do
-    GenServer.call(Relaxbot.TweetStore, {:lookup, tweet_id})
+  def tweeted?(message_id) do
+    GenServer.call(__MODULE__, {:tweeted?, message_id})
   end
 
   @doc """
-  Stores a `data` with a unique id of `tweet_id` it will update
-  if the key already exists.
-  """
-  def store(tweet_id, data) do
-    GenServer.cast(Relaxbot.TweetStore, {:store, tweet_id, data})
-  end
+  Notify the store that this message has been tweeted
 
-  @doc """
-  Deletes the tweet entry by `tweet_id`.
+  Returns `true if the tweet has been
   """
-  def delete(tweet_id) do
-    GenServer.cast(Relaxbot.TweetStore, {:delete, tweet_id})
+  def tweet(message_id) do
+    GenServer.cast(__MODULE__, {:tweet, message_id})
   end
 
   ## Server Callbacks
   def init(:ok) do
-    {:ok, _db} = :dets.open_file(Application.get_env(:relaxbot, :tweet_store), [type: :set])
-  end
-
-  def handle_call({:lookup, tweet_id}, _from, db) do
-    case :dets.lookup(db, tweet_id) do 
-      [{_tweet_id, data}|_] -> {:reply, {:ok, data}, db}
-      [] -> {:reply, {:error, []}, db}
+    case open_dets do
+      {:ok, db} -> {:ok, db}
+      {:EXIT, _} -> open_dets(:clean)
     end
   end
 
-  def handle_cast({:store, tweet_id, data}, db) do
-    :dets.insert(db, {tweet_id, data})
-    {:noreply, db}
+  defp open_dets do
+    :dets.open_file(
+      Application.get_env(:relaxbot, :tweet_store),
+      [type: :set, auto_save: 10000]
+    )
   end
 
-  def handle_cast({:delete, tweet_id}, db) do
-    :dets.delete(db, tweet_id)
+  defp open_dets(:clean) do
+    IO.puts("Dets file corrupt, recreating...")
+    File.rm Application.get_env(:relaxbot, :tweet_store)
+    open_dets
+  end
+
+  def handle_call({:tweeted?, id}, _from, db) do
+    case :dets.lookup(db, id) do
+      [{_id, _data}|_] -> {:reply, true, db}
+      [] -> {:reply, false, db}
+    end
+  end
+
+  def handle_cast({:tweet, id}, db) do
+    :dets.insert(db, {id, true})
     {:noreply, db}
   end
 
