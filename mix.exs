@@ -33,10 +33,10 @@ defmodule Relaxbot.Mixfile do
   defp deps do
     [
       {:httpoison, "~> 0.9.0"},
-      {:slack, "~> 0.7.1"},
-      {:websocket_client, git: "https://github.com/jeremyong/websocket_client"},
       {:oauth, github: "tim/erlang-oauth"},
-      {:extwitter, "~> 0.6"}
+      {:extwitter, "~> 0.6"},
+      # {:slack, github: "BlakeWilliams/Elixir-Slack"}
+      {:slack, github: "samsonasu/Elixir-Slack", branch: 'bs-fix-info-handler'}
     ]
   end
 end

@@ -13,14 +13,7 @@ defmodule Relaxbot.Supervisor do
       worker(Relaxbot.MessageCache, [])
     ]
 
-    result = supervise(children, strategy: :one_for_one)
-    #IO.inspect Supervisor.which_children(Relaxbot.Supervisor)
-
-    # pid = Supervisor.which_children(Relaxbot.Supervisor)
-    #    |> Enum.each(&Relaxbot.Supervisor.slack_pid/1)
-    #    |> Enum.find(fn (x) -> !!x end)
-    # IO.puts "SLACK PID = #{pid}"
-    result
+    supervise(children, strategy: :one_for_one)
   end
 
 end
