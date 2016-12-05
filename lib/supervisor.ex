@@ -10,7 +10,8 @@ defmodule Relaxbot.Supervisor do
     children = [
       worker(Relaxbot.MessageHandler, []),
       worker(Relaxbot.ReactionCounter, []),
-      worker(Relaxbot.MessageCache, [])
+      worker(Relaxbot.MessageCache, []),
+      worker(Relaxbot.TweetStore, []),
     ]
 
     supervise(children, strategy: :one_for_one)

@@ -2,7 +2,8 @@ use Mix.Config
 
 config :relaxbot,
   slack_token: "SLACK_TOKEN_HERE",
-  twitter_handle: "madworkscw"
+  twitter_handle: "madworkscw",
+  tweet_store: "/tmp/tweet-store.dets"
 
 config :extwitter, :oauth, [
    consumer_key: ,
